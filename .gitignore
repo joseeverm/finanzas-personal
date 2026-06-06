@@ -1,0 +1,14 @@
+# dependencias
+node_modules/
+client/node_modules/
+server/node_modules/
+
+# base de datos local
+server/finanzas.db
+
+# variables de entorno
+.env
+server/.env
+
+# build
+client/dist/
