@@ -1,0 +1,18 @@
+import express from 'express'
+import cors from 'cors'
+import dotenv from 'dotenv'
+import categoriesRouter from './routes/categories.js'
+import transactionsRouter from './routes/transactions.js'
+
+dotenv.config()
+
+const app = express()
+app.use(cors())
+app.use(express.json())
+
+app.use('/api/categories', categoriesRouter)
+app.use('/api/transactions', transactionsRouter)
+
+app.listen(process.env.PORT, () => {
+  console.log(`🚀 Servidor corriendo en http://localhost:${process.env.PORT}`)
+})
