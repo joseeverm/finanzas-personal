@@ -60,7 +60,7 @@ export default function Dashboard() {
   const balance = income - expense
 
   const pieData = summary.byCategory.map(c => ({
-    name: `${c.icon} ${c.name}`,
+    name: c.name,
     value: Number(c.total),
     color: c.color,
   }))

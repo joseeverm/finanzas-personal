@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Trash2 } from 'lucide-react'
 
 const fmt = (n) => new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }).format(n)
 
@@ -30,8 +31,6 @@ function ConfirmDialog({ onConfirm, onCancel }) {
 export default function TransactionList({ transactions, onDelete }) {
   const [pendingId, setPendingId] = useState(null)
 
-  const handleDelete = (id) => setPendingId(id)
-
   const confirmDelete = () => {
     onDelete(pendingId)
     setPendingId(null)
@@ -55,12 +54,14 @@ export default function TransactionList({ transactions, onDelete }) {
               <p className={`font-semibold text-sm ${t.type === 'expense' ? 'text-red-400' : 'text-emerald-400'}`}>
                 {t.type === 'expense' ? '−' : '+'}{fmt(t.amount)}
               </p>
-              <p className="text-zinc-400 text-xs">{t.date} {t.note && `· ${t.note}`}</p>
+              <p className="text-zinc-400 text-xs">{t.date}{t.note && ` · ${t.note}`}</p>
             </div>
             <button
-              onClick={() => handleDelete(t.id)}
-              className="text-zinc-600 hover:text-red-400 text-lg transition-colors"
-            >×</button>
+              onClick={() => setPendingId(t.id)}
+              className="text-zinc-600 hover:text-red-400 transition-colors p-1"
+            >
+              <Trash2 size={15} />
+            </button>
           </li>
         ))}
       </ul>

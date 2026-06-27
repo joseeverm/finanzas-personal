@@ -3,15 +3,15 @@ import { getCategories, createCategory } from '../api'
 
 export default function Categories() {
   const [categories, setCategories] = useState([])
-  const [form, setForm] = useState({ name: '', icon: '📦', color: '#6366f1' })
+  const [form, setForm] = useState({ name: '', color: '#6366f1' })
 
   const load = () => getCategories().then(setCategories)
   useEffect(() => { load() }, [])
 
   const handleAdd = async () => {
     if (!form.name) return
-    await createCategory(form)
-    setForm({ name: '', icon: '📦', color: '#6366f1' })
+    await createCategory({ name: form.name, color: form.color, icon: '' })
+    setForm({ name: '', color: '#6366f1' })
     load()
   }
 
@@ -27,19 +27,14 @@ export default function Categories() {
           onChange={e => setForm(f => ({ ...f, name: e.target.value }))}
           className="bg-zinc-700 text-white rounded-lg px-3 py-2 text-sm outline-none focus:ring-2 ring-violet-500"
         />
-        <div className="flex gap-2">
-          <input
-            placeholder="Icono"
-            value={form.icon}
-            onChange={e => setForm(f => ({ ...f, icon: e.target.value }))}
-            className="bg-zinc-700 text-white rounded-lg px-3 py-2 text-sm outline-none w-24"
-          />
+        <div className="flex items-center gap-3">
           <input
             type="color"
             value={form.color}
             onChange={e => setForm(f => ({ ...f, color: e.target.value }))}
-            className="bg-zinc-700 rounded-lg px-2 py-1 h-10 cursor-pointer"
+            className="bg-zinc-700 rounded-lg w-10 h-10 px-1 py-1 cursor-pointer"
           />
+          <span className="text-zinc-400 text-sm">Color de la categoría</span>
         </div>
         <button
           onClick={handleAdd}
@@ -52,9 +47,8 @@ export default function Categories() {
       <ul className="flex flex-col gap-2">
         {categories.map(c => (
           <li key={c.id} className="bg-zinc-800 rounded-xl px-4 py-3 flex items-center gap-3">
-            <span className="text-xl">{c.icon}</span>
+            <span className="w-3 h-3 rounded-full shrink-0" style={{ background: c.color }} />
             <span className="text-white text-sm">{c.name}</span>
-            <span className="ml-auto w-3 h-3 rounded-full" style={{ background: c.color }} />
           </li>
         ))}
       </ul>

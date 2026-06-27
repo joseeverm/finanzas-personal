@@ -1,11 +1,12 @@
 import { NavLink, useNavigate } from 'react-router-dom'
+import { LayoutDashboard, ArrowLeftRight, Tag, Download, LogOut, Wallet } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
 import { exportData } from '../api'
 
 const links = [
-  { to: '/', label: 'Dashboard', icon: '📊' },
-  { to: '/transactions', label: 'Transacciones', icon: '💸' },
-  { to: '/categories', label: 'Categorías', icon: '🏷️' },
+  { to: '/', label: 'Dashboard', icon: LayoutDashboard },
+  { to: '/transactions', label: 'Transacciones', icon: ArrowLeftRight },
+  { to: '/categories', label: 'Categorías', icon: Tag },
 ]
 
 async function handleExport() {
@@ -33,36 +34,45 @@ export default function Navbar() {
     <>
       {/* Desktop — barra superior */}
       <nav className="hidden md:flex bg-zinc-900 border-b border-zinc-700 px-6 py-3 gap-6 items-center">
-        <span className="text-white font-bold text-lg mr-4">💰 Finanzas</span>
-        {links.map(link => (
+        <div className="flex items-center gap-2 mr-4">
+          <Wallet size={20} className="text-violet-400" />
+          <span className="text-white font-bold text-lg">Finanzas</span>
+        </div>
+
+        {links.map(({ to, label, icon: Icon }) => (
           <NavLink
-            key={link.to}
-            to={link.to}
+            key={to}
+            to={to}
             end
             className={({ isActive }) =>
-              `text-sm transition-colors ${isActive ? 'text-violet-400 font-semibold' : 'text-zinc-400 hover:text-white'}`
+              `flex items-center gap-1.5 text-sm transition-colors ${isActive ? 'text-violet-400 font-semibold' : 'text-zinc-400 hover:text-white'}`
             }
           >
-            {link.icon} {link.label}
+            <Icon size={15} />
+            {label}
           </NavLink>
         ))}
 
-        <div className="ml-auto flex items-center gap-3">
+        <div className="ml-auto flex items-center gap-4">
           <button
             onClick={handleExport}
-            className="text-sm text-zinc-400 hover:text-white transition-colors"
+            className="flex items-center gap-1.5 text-sm text-zinc-400 hover:text-white transition-colors"
             title="Exportar datos"
           >
-            ⬇️ Exportar
+            <Download size={15} />
+            Exportar
           </button>
+
           {user?.picture
             ? <img src={user.picture} alt={user.name} className="w-8 h-8 rounded-full" referrerPolicy="no-referrer" />
             : <span className="text-zinc-400 text-sm">{user?.name}</span>
           }
+
           <button
             onClick={handleLogout}
-            className="text-sm text-zinc-400 hover:text-red-400 transition-colors"
+            className="flex items-center gap-1.5 text-sm text-zinc-400 hover:text-red-400 transition-colors"
           >
+            <LogOut size={15} />
             Salir
           </button>
         </div>
@@ -70,37 +80,38 @@ export default function Navbar() {
 
       {/* Mobile — barra inferior */}
       <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-zinc-900 border-t border-zinc-700 flex z-50">
-        {links.map(link => (
+        {links.map(({ to, label, icon: Icon }) => (
           <NavLink
-            key={link.to}
-            to={link.to}
+            key={to}
+            to={to}
             end
             className={({ isActive }) =>
               `flex-1 flex flex-col items-center py-3 gap-1 text-xs transition-colors
               ${isActive ? 'text-violet-400' : 'text-zinc-500 hover:text-white'}`
             }
           >
-            <span className="text-xl">{link.icon}</span>
-            {link.label}
+            <Icon size={20} />
+            {label}
           </NavLink>
         ))}
+
         <button
           onClick={handleExport}
           className="flex-1 flex flex-col items-center py-3 gap-1 text-xs text-zinc-500 hover:text-white transition-colors"
         >
-          <span className="text-xl">⬇️</span>
+          <Download size={20} />
           Exportar
         </button>
+
         <button
           onClick={handleLogout}
           className="flex-1 flex flex-col items-center py-3 gap-1 text-xs text-zinc-500 hover:text-red-400 transition-colors"
         >
-          <span className="text-xl">🚪</span>
+          <LogOut size={20} />
           Salir
         </button>
       </nav>
 
-      {/* Espaciado para que el contenido no quede tapado por la barra inferior en mobile */}
       <div className="md:hidden h-16" />
     </>
   )

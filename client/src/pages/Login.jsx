@@ -1,13 +1,14 @@
 import { useState } from 'react'
 import { GoogleLogin } from '@react-oauth/google'
 import { useNavigate } from 'react-router-dom'
+import { Wallet } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
 import { loginWithGoogle, loginWithEmail, registerWithEmail } from '../api'
 
 export default function Login() {
   const { login } = useAuth()
   const navigate = useNavigate()
-  const [mode, setMode] = useState('login') // 'login' | 'register'
+  const [mode, setMode] = useState('login')
   const [form, setForm] = useState({ email: '', password: '', name: '' })
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
@@ -48,13 +49,14 @@ export default function Login() {
   return (
     <div className="min-h-screen bg-zinc-950 flex items-center justify-center px-4">
       <div className="bg-zinc-900 border border-zinc-700 rounded-2xl p-8 flex flex-col items-center gap-6 w-full max-w-sm">
-        <span className="text-5xl">💰</span>
-        <div className="text-center">
-          <h1 className="text-white text-2xl font-bold">Finanzas Personal</h1>
-          <p className="text-zinc-400 text-sm mt-1">
-            {mode === 'login' ? 'Inicia sesión para continuar' : 'Crea tu cuenta'}
-          </p>
+        <div className="flex items-center gap-2">
+          <Wallet size={28} className="text-violet-400" />
+          <span className="text-white text-2xl font-bold">Finanzas</span>
         </div>
+
+        <p className="text-zinc-400 text-sm -mt-3">
+          {mode === 'login' ? 'Inicia sesión para continuar' : 'Crea tu cuenta'}
+        </p>
 
         <form onSubmit={handleSubmit} className="w-full flex flex-col gap-3">
           {mode === 'register' && (
@@ -91,7 +93,7 @@ export default function Login() {
             disabled={loading}
             className="w-full bg-violet-600 hover:bg-violet-500 disabled:opacity-50 text-white font-semibold py-2.5 rounded-lg text-sm transition-colors"
           >
-            {loading ? '...' : mode === 'login' ? 'Iniciar sesión' : 'Registrarse'}
+            {loading ? 'Cargando...' : mode === 'login' ? 'Iniciar sesión' : 'Registrarse'}
           </button>
         </form>
 
@@ -111,9 +113,7 @@ export default function Login() {
         />
 
         <button onClick={toggle} className="text-zinc-500 text-xs hover:text-zinc-300 transition-colors">
-          {mode === 'login'
-            ? '¿No tienes cuenta? Regístrate'
-            : '¿Ya tienes cuenta? Inicia sesión'}
+          {mode === 'login' ? '¿No tienes cuenta? Regístrate' : '¿Ya tienes cuenta? Inicia sesión'}
         </button>
       </div>
     </div>
