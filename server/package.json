@@ -13,10 +13,13 @@
   "packageManager": "pnpm@10.33.0",
   "dependencies": {
     "@libsql/client": "^0.17.3",
+    "bcryptjs": "^3.0.3",
     "better-sqlite3": "^12.10.0",
     "cors": "^2.8.6",
     "dotenv": "^17.4.2",
-    "express": "^5.2.1"
+    "express": "^5.2.1",
+    "google-auth-library": "^10.9.0",
+    "jsonwebtoken": "^9.0.3"
   },
   "devDependencies": {
     "@mapbox/node-pre-gyp": "^2.0.3"

@@ -1,4 +1,5 @@
-import { NavLink } from 'react-router-dom'
+import { NavLink, useNavigate } from 'react-router-dom'
+import { useAuth } from '../context/AuthContext'
 import { exportData } from '../api'
 
 const links = [
@@ -20,6 +21,14 @@ async function handleExport() {
 }
 
 export default function Navbar() {
+  const { user, logout } = useAuth()
+  const navigate = useNavigate()
+
+  function handleLogout() {
+    logout()
+    navigate('/login')
+  }
+
   return (
     <>
       {/* Desktop — barra superior */}
@@ -37,13 +46,26 @@ export default function Navbar() {
             {link.icon} {link.label}
           </NavLink>
         ))}
-        <button
-          onClick={handleExport}
-          className="ml-auto text-sm text-zinc-400 hover:text-white transition-colors"
-          title="Exportar datos"
-        >
-          ⬇️ Exportar
-        </button>
+
+        <div className="ml-auto flex items-center gap-3">
+          <button
+            onClick={handleExport}
+            className="text-sm text-zinc-400 hover:text-white transition-colors"
+            title="Exportar datos"
+          >
+            ⬇️ Exportar
+          </button>
+          {user?.picture
+            ? <img src={user.picture} alt={user.name} className="w-8 h-8 rounded-full" referrerPolicy="no-referrer" />
+            : <span className="text-zinc-400 text-sm">{user?.name}</span>
+          }
+          <button
+            onClick={handleLogout}
+            className="text-sm text-zinc-400 hover:text-red-400 transition-colors"
+          >
+            Salir
+          </button>
+        </div>
       </nav>
 
       {/* Mobile — barra inferior */}
@@ -68,6 +90,13 @@ export default function Navbar() {
         >
           <span className="text-xl">⬇️</span>
           Exportar
+        </button>
+        <button
+          onClick={handleLogout}
+          className="flex-1 flex flex-col items-center py-3 gap-1 text-xs text-zinc-500 hover:text-red-400 transition-colors"
+        >
+          <span className="text-xl">🚪</span>
+          Salir
         </button>
       </nav>
 
