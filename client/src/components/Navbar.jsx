@@ -1,10 +1,23 @@
 import { NavLink } from 'react-router-dom'
+import { exportData } from '../api'
 
 const links = [
   { to: '/', label: 'Dashboard', icon: '📊' },
   { to: '/transactions', label: 'Transacciones', icon: '💸' },
   { to: '/categories', label: 'Categorías', icon: '🏷️' },
 ]
+
+async function handleExport() {
+  const data = await exportData()
+  const date = new Date().toISOString().slice(0, 10)
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' })
+  const url = URL.createObjectURL(blob)
+  const a = document.createElement('a')
+  a.href = url
+  a.download = `finanzas-backup-${date}.json`
+  a.click()
+  URL.revokeObjectURL(url)
+}
 
 export default function Navbar() {
   return (
@@ -24,6 +37,13 @@ export default function Navbar() {
             {link.icon} {link.label}
           </NavLink>
         ))}
+        <button
+          onClick={handleExport}
+          className="ml-auto text-sm text-zinc-400 hover:text-white transition-colors"
+          title="Exportar datos"
+        >
+          ⬇️ Exportar
+        </button>
       </nav>
 
       {/* Mobile — barra inferior */}
@@ -42,6 +62,13 @@ export default function Navbar() {
             {link.label}
           </NavLink>
         ))}
+        <button
+          onClick={handleExport}
+          className="flex-1 flex flex-col items-center py-3 gap-1 text-xs text-zinc-500 hover:text-white transition-colors"
+        >
+          <span className="text-xl">⬇️</span>
+          Exportar
+        </button>
       </nav>
 
       {/* Espaciado para que el contenido no quede tapado por la barra inferior en mobile */}

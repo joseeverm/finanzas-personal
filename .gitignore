@@ -12,3 +12,4 @@ server/.env
 
 # build
 client/dist/
+CLAUDE.md

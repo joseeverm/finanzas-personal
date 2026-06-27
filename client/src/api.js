@@ -10,3 +10,5 @@ export const createTransaction = (data) => api.post('/transactions', data).then(
 export const updateTransaction = (id, data) => api.put(`/transactions/${id}`, data).then(r => r.data)
 export const deleteTransaction = (id) => api.delete(`/transactions/${id}`).then(r => r.data)
 export const getSummary = (params) => api.get('/transactions/summary', { params }).then(r => r.data)
+
+export const exportData = () => api.get('/export').then(r => r.data)

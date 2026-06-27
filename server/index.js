@@ -3,6 +3,7 @@ import cors from 'cors'
 import dotenv from 'dotenv'
 import categoriesRouter from './routes/categories.js'
 import transactionsRouter from './routes/transactions.js'
+import exportRouter from './routes/export.js'
 
 dotenv.config()
 
@@ -12,6 +13,7 @@ app.use(express.json())
 
 app.use('/api/categories', categoriesRouter)
 app.use('/api/transactions', transactionsRouter)
+app.use('/api/export', exportRouter)
 
 app.listen(process.env.PORT, () => {
   console.log(`🚀 Servidor corriendo en http://localhost:${process.env.PORT}`)
