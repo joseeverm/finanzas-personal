@@ -1,25 +1,12 @@
 import { NavLink, useNavigate } from 'react-router-dom'
-import { LayoutDashboard, ArrowLeftRight, Tag, Download, LogOut, Wallet } from 'lucide-react'
+import { LayoutDashboard, ArrowLeftRight, Tag, LogOut, Wallet } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
-import { exportData } from '../api'
 
 const links = [
   { to: '/', label: 'Dashboard', icon: LayoutDashboard },
   { to: '/transactions', label: 'Transacciones', icon: ArrowLeftRight },
   { to: '/categories', label: 'Categorías', icon: Tag },
 ]
-
-async function handleExport() {
-  const data = await exportData()
-  const date = new Date().toISOString().slice(0, 10)
-  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' })
-  const url = URL.createObjectURL(blob)
-  const a = document.createElement('a')
-  a.href = url
-  a.download = `finanzas-backup-${date}.json`
-  a.click()
-  URL.revokeObjectURL(url)
-}
 
 export default function Navbar() {
   const { user, logout } = useAuth()
@@ -54,15 +41,6 @@ export default function Navbar() {
         ))}
 
         <div className="ml-auto flex items-center gap-4">
-          <button
-            onClick={handleExport}
-            className="flex items-center gap-1.5 text-sm text-zinc-400 hover:text-white transition-colors"
-            title="Exportar datos"
-          >
-            <Download size={15} />
-            Exportar
-          </button>
-
           {user?.picture
             ? <img src={user.picture} alt={user.name} className="w-8 h-8 rounded-full" referrerPolicy="no-referrer" />
             : <span className="text-zinc-400 text-sm">{user?.name}</span>
@@ -96,14 +74,6 @@ export default function Navbar() {
         ))}
 
         <button
-          onClick={handleExport}
-          className="flex-1 flex flex-col items-center py-3 gap-1 text-xs text-zinc-500 hover:text-white transition-colors"
-        >
-          <Download size={20} />
-          Exportar
-        </button>
-
-        <button
           onClick={handleLogout}
           className="flex-1 flex flex-col items-center py-3 gap-1 text-xs text-zinc-500 hover:text-red-400 transition-colors"
         >
@@ -112,7 +82,6 @@ export default function Navbar() {
         </button>
       </nav>
 
-      <div className="md:hidden h-16" />
     </>
   )
 }

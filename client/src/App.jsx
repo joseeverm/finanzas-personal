@@ -23,11 +23,13 @@ function AppRoutes() {
           <ProtectedRoute>
             <div className="min-h-screen bg-zinc-950 text-white">
               <Navbar />
+              <div className="pb-20 md:pb-0">
               <Routes>
                 <Route path="/" element={<Dashboard />} />
                 <Route path="/transactions" element={<Transactions />} />
                 <Route path="/categories" element={<Categories />} />
               </Routes>
+              </div>
             </div>
           </ProtectedRoute>
         }

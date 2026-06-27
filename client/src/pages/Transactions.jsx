@@ -1,7 +1,21 @@
 import { useState } from 'react'
+import { Download } from 'lucide-react'
 import { useTransactions } from '../hooks/useTransactions'
 import TransactionForm from '../components/TransactionForm'
 import TransactionList from '../components/TransactionList'
+import { exportData } from '../api'
+
+async function handleExport() {
+  const data = await exportData()
+  const date = new Date().toISOString().slice(0, 10)
+  const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' })
+  const url = URL.createObjectURL(blob)
+  const a = document.createElement('a')
+  a.href = url
+  a.download = `finanzas-backup-${date}.json`
+  a.click()
+  URL.revokeObjectURL(url)
+}
 
 const currentMonth = new Date().toISOString().slice(0, 7)
 
@@ -22,6 +36,14 @@ export default function Transactions() {
       </div>
       <TransactionForm onSubmit={add} />
       {loading ? <p className="text-zinc-500 text-sm text-center">Cargando...</p> : <TransactionList transactions={transactions} onDelete={remove} />}
+
+      <button
+        onClick={handleExport}
+        className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl border border-zinc-700 text-zinc-400 hover:text-white hover:border-zinc-500 text-sm transition-colors"
+      >
+        <Download size={15} />
+        Exportar datos
+      </button>
     </div>
   )
 }
