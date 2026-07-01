@@ -32,6 +32,17 @@ router.get('/summary', async (req, res) => {
   res.json({ totals: totals.rows, byCategory: byCategory.rows })
 })
 
+router.get('/balance', async (req, res) => {
+  const result = await db.execute({
+    sql: `SELECT
+            COALESCE(SUM(CASE WHEN type='income' THEN amount ELSE 0 END), 0) -
+            COALESCE(SUM(CASE WHEN type='expense' THEN amount ELSE 0 END), 0) AS balance
+          FROM transactions WHERE user_id = ?`,
+    args: [req.userId],
+  })
+  res.json({ balance: Number(result.rows[0].balance) })
+})
+
 router.get('/', async (req, res) => {
   const { month, category_id } = req.query
   let sql = 'SELECT * FROM transactions WHERE user_id = ?'
