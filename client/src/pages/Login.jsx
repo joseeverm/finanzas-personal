@@ -1,7 +1,6 @@
 import { useState } from 'react'
 import { GoogleLogin } from '@react-oauth/google'
 import { useNavigate } from 'react-router-dom'
-import { Wallet } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
 import { loginWithGoogle, loginWithEmail, registerWithEmail } from '../api'
 
@@ -50,7 +49,7 @@ export default function Login() {
     <div className="min-h-screen bg-zinc-950 flex items-center justify-center px-4">
       <div className="bg-zinc-900 border border-zinc-700 rounded-2xl p-8 flex flex-col items-center gap-6 w-full max-w-sm">
         <div className="flex items-center gap-2">
-          <Wallet size={28} className="text-violet-400" />
+          <img src="/favicon.svg" alt="logo" className="w-8 h-8" />
           <span className="text-white text-2xl font-bold">Finanzas</span>
         </div>
 

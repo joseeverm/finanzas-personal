@@ -1,5 +1,5 @@
 import { NavLink, useNavigate } from 'react-router-dom'
-import { LayoutDashboard, ArrowLeftRight, Tag, LogOut, Wallet } from 'lucide-react'
+import { LayoutDashboard, ArrowLeftRight, Tag, LogOut } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
 
 const links = [
@@ -22,7 +22,7 @@ export default function Navbar() {
       {/* Desktop — barra superior */}
       <nav className="hidden md:flex bg-zinc-900 border-b border-zinc-700 px-6 py-3 gap-6 items-center">
         <div className="flex items-center gap-2 mr-4">
-          <Wallet size={20} className="text-violet-400" />
+          <img src="/favicon.svg" alt="logo" className="w-7 h-7" />
           <span className="text-white font-bold text-lg">Finanzas</span>
         </div>
 
