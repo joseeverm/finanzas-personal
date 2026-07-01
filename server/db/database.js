@@ -57,5 +57,7 @@ await db.execute(`
 try { await db.execute('ALTER TABLE categories ADD COLUMN user_id INTEGER DEFAULT 1') } catch {}
 try { await db.execute('ALTER TABLE transactions ADD COLUMN user_id INTEGER DEFAULT 1') } catch {}
 try { await db.execute('ALTER TABLE users ADD COLUMN password_hash TEXT') } catch {}
+try { await db.execute('ALTER TABLE users ADD COLUMN reset_token TEXT') } catch {}
+try { await db.execute('ALTER TABLE users ADD COLUMN reset_token_expires TEXT') } catch {}
 
 export default db

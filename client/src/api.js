@@ -23,3 +23,6 @@ export const getSummary = (params) => api.get('/transactions/summary', { params 
 export const getBalance = () => api.get('/transactions/balance').then(r => r.data)
 
 export const exportData = () => api.get('/export').then(r => r.data)
+
+export const forgotPassword = (email) => api.post('/auth/forgot-password', { email }).then(r => r.data)
+export const resetPassword = (token, password) => api.post('/auth/reset-password', { token, password }).then(r => r.data)

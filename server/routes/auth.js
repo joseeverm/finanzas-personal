@@ -2,7 +2,11 @@ import { Router } from 'express'
 import { OAuth2Client } from 'google-auth-library'
 import jwt from 'jsonwebtoken'
 import bcrypt from 'bcryptjs'
+import crypto from 'crypto'
+import { Resend } from 'resend'
 import db from '../db/database.js'
+
+const resend = new Resend(process.env.RESEND_API_KEY)
 
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID)
 
@@ -118,6 +122,56 @@ router.post('/login', async (req, res) => {
 
   const token = jwt.sign({ userId: user.id }, process.env.JWT_SECRET, { expiresIn: '30d' })
   res.json({ token, user: { id: user.id, email: user.email, name: user.name, picture: user.picture } })
+})
+
+router.post('/forgot-password', async (req, res) => {
+  const { email } = req.body
+  if (!email) return res.status(400).json({ error: 'Email requerido' })
+
+  const result = await db.execute({ sql: 'SELECT id FROM users WHERE email = ?', args: [email] })
+  const user = result.rows[0]
+
+  if (user) {
+    const token = crypto.randomBytes(32).toString('hex')
+    const expires = new Date(Date.now() + 60 * 60 * 1000).toISOString()
+    await db.execute({
+      sql: 'UPDATE users SET reset_token = ?, reset_token_expires = ? WHERE id = ?',
+      args: [token, expires, user.id],
+    })
+    await resend.emails.send({
+      from: 'onboarding@resend.dev',
+      to: email,
+      subject: 'Recupera tu contraseña — Finanzas Personal',
+      html: `<p>Haz clic en el siguiente enlace para restablecer tu contraseña. El enlace expira en 1 hora.</p>
+             <p><a href="https://finanzas-personal-sable.vercel.app/reset-password?token=${token}">Restablecer contraseña</a></p>
+             <p>Si no solicitaste esto, ignora este mensaje.</p>`,
+    })
+  }
+
+  res.json({ ok: true })
+})
+
+router.post('/reset-password', async (req, res) => {
+  const { token, password } = req.body
+  if (!token || !password) return res.status(400).json({ error: 'Token y contraseña son requeridos' })
+
+  const result = await db.execute({
+    sql: 'SELECT id, reset_token_expires FROM users WHERE reset_token = ?',
+    args: [token],
+  })
+  const user = result.rows[0]
+
+  if (!user || new Date(user.reset_token_expires) < new Date()) {
+    return res.status(400).json({ error: 'El enlace es inválido o ha expirado' })
+  }
+
+  const password_hash = await bcrypt.hash(password, 12)
+  await db.execute({
+    sql: 'UPDATE users SET password_hash = ?, reset_token = NULL, reset_token_expires = NULL WHERE id = ?',
+    args: [password_hash, user.id],
+  })
+
+  res.json({ ok: true })
 })
 
 export default router

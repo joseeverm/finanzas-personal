@@ -1,12 +1,14 @@
 import { useState } from 'react'
 import { GoogleLogin } from '@react-oauth/google'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, useLocation, Link } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { loginWithGoogle, loginWithEmail, registerWithEmail } from '../api'
 
 export default function Login() {
   const { login } = useAuth()
   const navigate = useNavigate()
+  const location = useLocation()
+  const successMessage = location.state?.message
   const [mode, setMode] = useState('login')
   const [form, setForm] = useState({ email: '', password: '', name: '' })
   const [error, setError] = useState('')
@@ -57,6 +59,10 @@ export default function Login() {
           {mode === 'login' ? 'Inicia sesión para continuar' : 'Crea tu cuenta'}
         </p>
 
+        {successMessage && (
+          <p className="text-emerald-400 text-sm text-center -mt-2">{successMessage}</p>
+        )}
+
         <form onSubmit={handleSubmit} className="w-full flex flex-col gap-3">
           {mode === 'register' && (
             <input
@@ -86,6 +92,12 @@ export default function Login() {
           />
 
           {error && <p className="text-red-400 text-xs text-center">{error}</p>}
+
+          {mode === 'login' && (
+            <Link to="/forgot-password" className="text-zinc-500 text-xs hover:text-zinc-300 transition-colors text-right">
+              ¿Olvidaste tu contraseña?
+            </Link>
+          )}
 
           <button
             type="submit"
