@@ -74,14 +74,28 @@ router.post('/google', async (req, res) => {
 })
 
 router.post('/register', async (req, res) => {
-  const { email, password, name } = req.body
+  const { email, password, name, linkAccount } = req.body
   if (!email || !password || !name) {
     return res.status(400).json({ error: 'Email, nombre y contraseña son requeridos' })
   }
 
-  const existing = await db.execute({ sql: 'SELECT id FROM users WHERE email = ?', args: [email] })
-  if (existing.rows[0]) {
-    return res.status(409).json({ error: 'Ya existe una cuenta con ese email' })
+  const existing = await db.execute({ sql: 'SELECT * FROM users WHERE email = ?', args: [email] })
+  const existingUser = existing.rows[0]
+
+  if (existingUser) {
+    if (existingUser.google_id && !existingUser.password_hash) {
+      if (!linkAccount) {
+        return res.status(409).json({ error: 'google_account_exists' })
+      }
+      const password_hash = await bcrypt.hash(password, 12)
+      await db.execute({
+        sql: 'UPDATE users SET password_hash = ? WHERE id = ?',
+        args: [password_hash, existingUser.id],
+      })
+      const token = jwt.sign({ userId: existingUser.id }, process.env.JWT_SECRET, { expiresIn: '30d' })
+      return res.json({ token, user: { id: existingUser.id, email: existingUser.email, name: existingUser.name, picture: existingUser.picture } })
+    }
+    return res.status(409).json({ error: 'email_already_exists' })
   }
 
   const password_hash = await bcrypt.hash(password, 12)

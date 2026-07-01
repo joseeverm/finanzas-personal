@@ -10,7 +10,8 @@ api.interceptors.request.use(config => {
 
 export const loginWithGoogle = (token) => api.post('/auth/google', { token }).then(r => r.data)
 export const loginWithEmail = (email, password) => api.post('/auth/login', { email, password }).then(r => r.data)
-export const registerWithEmail = (email, password, name) => api.post('/auth/register', { email, password, name }).then(r => r.data)
+export const registerWithEmail = (email, password, name, linkAccount = false) =>
+  api.post('/auth/register', { email, password, name, ...(linkAccount && { linkAccount: true }) }).then(r => r.data)
 
 export const getCategories = () => api.get('/categories').then(r => r.data)
 export const createCategory = (data) => api.post('/categories', data).then(r => r.data)
