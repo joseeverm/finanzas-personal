@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { getCategories, createCategory } from '../api'
+import CategoryBreakdown from '../components/CategoryBreakdown'
 
 export default function Categories() {
   const [categories, setCategories] = useState([])
@@ -18,6 +19,8 @@ export default function Categories() {
   return (
     <div className="max-w-xl mx-auto px-4 py-6 flex flex-col gap-6">
       <h1 className="text-white font-bold text-xl">Categorías</h1>
+
+      <CategoryBreakdown categories={categories} />
 
       <div className="bg-zinc-800 rounded-xl p-5 flex flex-col gap-3">
         <h2 className="text-white font-semibold text-sm">Nueva categoría</h2>
@@ -44,6 +47,7 @@ export default function Categories() {
         </button>
       </div>
 
+      <h2 className="text-zinc-400 text-sm font-medium -mb-3">Todas las categorías</h2>
       <ul className="flex flex-col gap-2">
         {categories.map(c => (
           <li key={c.id} className="bg-zinc-800 rounded-xl px-4 py-3 flex items-center gap-3">
