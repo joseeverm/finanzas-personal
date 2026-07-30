@@ -57,7 +57,7 @@ export default function Navbar() {
       </nav>
 
       {/* Mobile — barra inferior */}
-      <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-zinc-900 border-t border-zinc-700 flex z-50">
+      <nav className="md:hidden fixed bottom-0 left-0 right-0 bg-zinc-900 border-t border-zinc-700 flex z-50 pb-[env(safe-area-inset-bottom)]">
         {links.map(({ to, label, icon: Icon }) => (
           <NavLink
             key={to}
